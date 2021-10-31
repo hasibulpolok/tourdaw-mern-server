@@ -2,6 +2,7 @@ const { MongoClient } = require('mongodb');
 const express = require('express');
 const cors = require('cors');
 const ObjectId = require('mongodb').ObjectId;
+const dotenv = require('dotenv').config()
 
 
 
@@ -12,7 +13,8 @@ app.use(cors());
 app.use(express.json());
 
 
-const uri = "mongodb+srv://tourdaw:dWs74UISToqfpGpC@cluster0.aeutd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.aeutd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
@@ -25,9 +27,9 @@ async function run() {
         const servicecollection = database.collection('service-list');
 
         // Get api 
-        app.get('/services',async(req,res)=>{
+        app.get('/services', async (req, res) => {
             const cursor = servicecollection.find({});
-            const services =await cursor.toArray();
+            const services = await cursor.toArray();
             res.send(services);
         })
 
@@ -35,19 +37,19 @@ async function run() {
         app.post('/services', async (req, res) => {
             const newservice = req.body;
             const result = await servicecollection.insertOne(newservice);
-            
+
             res.json(result);
         })
 
         // Delete Api
-        app.delete('/services/:id',async(req,res) =>{
+        app.delete('/services/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id:ObjectId(id)};
+            const query = { _id: ObjectId(id) };
             const result = await servicecollection.deleteOne(query)
             res.json(result);
         })
 
-        
+
 
     }
     finally {
