@@ -13,7 +13,8 @@ app.use(cors());
 app.use(express.json());
 
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.aeutd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://tourdaw:dWs74UISToqfpGpC@cluster0.aeutd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.aeutd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -25,6 +26,18 @@ async function run() {
 
         const database = client.db('Services');
         const servicecollection = database.collection('service-list');
+        const userbooking = database.collection('userbooking');
+
+
+        // POST API Booking
+        app.post('/book', async (req, res) => {
+            const bookdetails = req.body;
+            const result = await userbooking.insertOne(bookdetails);
+            res.json(result);
+            console.log(`A document was inserted with the _id: ${result.insertedId}`);
+        })
+
+
 
         // Get api 
         app.get('/services', async (req, res) => {
@@ -33,13 +46,14 @@ async function run() {
             res.send(services);
         })
 
+
         // POST API
         app.post('/services', async (req, res) => {
             const newservice = req.body;
             const result = await servicecollection.insertOne(newservice);
-
             res.json(result);
         })
+
 
         // Delete Api
         app.delete('/services/:id', async (req, res) => {
