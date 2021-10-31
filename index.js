@@ -44,6 +44,13 @@ async function run() {
             console.log(`A document was inserted with the _id: ${result.insertedId}`);
         })
 
+        // Delete Api book
+        app.delete('/book/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await userbooking.deleteOne(query)
+            res.json(result);
+        })
 
 
         // Get api place
