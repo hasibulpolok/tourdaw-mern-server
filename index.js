@@ -36,6 +36,22 @@ async function run() {
             res.send(booking);
         })
 
+
+        // update
+        app.put('/book/:id',async(req,res)=>{
+            const id = req.params.id;
+            const updated = req.body;
+            const query = { _id: ObjectId(id) };
+            const options = {upsert: true};
+            const updateDoc = {
+                $set:{
+                    status:updated.Status,
+                },
+            };
+            const result = await userbooking.updateOne(filter, updateDoc, Options)
+            res.json(result)
+        })
+
         // POST API Booking
         app.post('/book', async (req, res) => {
             const bookdetails = req.body;
