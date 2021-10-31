@@ -29,6 +29,13 @@ async function run() {
         const userbooking = database.collection('userbooking');
 
 
+        // Get api Book
+        app.get('/book', async (req, res) => {
+            const cursor = userbooking.find({});
+            const booking = await cursor.toArray();
+            res.send(booking);
+        })
+
         // POST API Booking
         app.post('/book', async (req, res) => {
             const bookdetails = req.body;
@@ -39,7 +46,7 @@ async function run() {
 
 
 
-        // Get api 
+        // Get api place
         app.get('/services', async (req, res) => {
             const cursor = servicecollection.find({});
             const services = await cursor.toArray();
@@ -47,7 +54,7 @@ async function run() {
         })
 
 
-        // POST API
+        // POST API place
         app.post('/services', async (req, res) => {
             const newservice = req.body;
             const result = await servicecollection.insertOne(newservice);
