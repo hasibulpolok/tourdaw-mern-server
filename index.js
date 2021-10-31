@@ -48,8 +48,17 @@ async function run() {
         app.delete('/book/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
+            console.log('deleting booking');
             const result = await userbooking.deleteOne(query)
             res.json(result);
+        })
+
+        app.get('/book/:id', async(req,res)=>{
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const book = await userbooking.findOne(query)
+            console.log(id);
+            res.send(book)
         })
 
 
